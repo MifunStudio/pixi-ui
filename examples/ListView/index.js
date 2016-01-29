@@ -1,5 +1,7 @@
 import PIXI from '@mifunstudio/pixi.js';
 import {ListView} from '../../src/view/ListView';
+import {ScrollView} from '../../src/view/ScrollView';
+import {ArrayAdapter} from '../../src/view/ArrayAdapter';
 import {VBox} from '../../src/layout';
 
 var stage = new PIXI.Stage({
@@ -9,35 +11,21 @@ var stage = new PIXI.Stage({
 stage.ticker.start();
 window.stage = stage;
 
-export class MyListView extends ListView {
+export class MyAdapter extends ArrayAdapter {
 
-    constructor() {
-        super(new VBox());
+    getView(key, convertView) {
+        var item = this.getItem(key);
+        return new PIXI.Text('item'+item, {
+            fill: '#FFFFFF',
+            font: 'normal 30px Arial'
+        });
     }
-
-    _updateItemView(index, originItemView, itemData) {
-        if(!itemData) {
-            originItemView.destroy();
-            return null;
-        }
-        if(!originItemView) {
-            originItemView = new PIXI.Text(itemData, {
-                font: '30px',
-                fill: '#FFFFFF'
-            });
-        }
-        originItemView.text = itemData;
-        return originItemView;
-    }
-
 }
 
 
-let listData = [];
-for(let i=0; i<30; i++) {
-    listData.push('item' + i);
-}
-let myListView = new MyListView();
-myListView.setListData(listData);
+var listView = new ListView();
+listView.setAdapter(new MyAdapter(["abc", "bcd"]));
 
-stage.addChild(myListView);
+var scrollView = new ScrollView(500, 300, listView);
+
+stage.addChild(scrollView);

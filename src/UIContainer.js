@@ -30,18 +30,26 @@ export class UIContainer extends PIXI.Container {
     updateTransform() {
         if (!this.visible) return;
         this.displayObjectUpdateTransform();
-        this._layoutManager && this._layoutManager.layout();
+        this.onLayout();
         for (var i=0,len=this.children.length; i<len; i++) {
             this.children[i].updateTransform();
         }
     }
 
     onChildrenChange() {
-        this._layoutManager && this._layoutManager.requestLayout();
+        this.requestLayout();
     }
 
     onSizeChange() {
+        this.emit('sizechange');
+    }
 
+    requestLayout() {
+        this._layoutManager && this._layoutManager.requestLayout();
+    }
+
+    onLayout() {
+        this._layoutManager && this._layoutManager.layout();
     }
 
 }

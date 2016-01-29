@@ -16,15 +16,6 @@ function middle(a, b, c) {
 export class ScrollView extends UIContainer {
 
     get container() { return this._container; }
-    set container(value) {
-        if(this._container) {
-            this._container.parent.removeChild(this._container);
-        }
-        this._container = value;
-        if(this._container) {
-            this.addChild(this._container);
-        }
-    }
 
     get viewRect() { return this._viewRect; }
     get clipRect() { return this._clipRect; }
@@ -44,7 +35,6 @@ export class ScrollView extends UIContainer {
     constructor(width, height, container) {
         super(width, height);
 
-        this.container = container;
         this.interactive = true;
         this.onSizeChange();
 
@@ -72,6 +62,20 @@ export class ScrollView extends UIContainer {
         this.on('panstart', this.onPanStart, this);
         this.on('panmove', this.onPanMove, this);
         this.on('panend', this.onPanEnd, this);
+
+        this.setContainer(container);
+    }
+
+    setContainer(container) {
+        if(this._container) {
+            this._container.parent.removeChild(this._container);
+            this._container.off('sizechange', this._onContainerSizeChange, this);
+        }
+        this._container = container;
+        if(this._container) {
+            this.addChild(this._container);
+            this._container.on('sizechange', this._onContainerSizeChange, this);
+        }
     }
 
     destroy(destroyChildren) {
@@ -113,11 +117,21 @@ export class ScrollView extends UIContainer {
     }
 
     getMinScrollX() {
-        return this._viewRect.width - this.getContentSize().width;
+        var contentW = this.getContentSize().width;
+        var viewW = this._viewRect.width;
+        if(viewW - contentW > 0) {
+            return 0;
+        }
+        return viewW - contentW;
     }
 
     getMinScrollY() {
-        return this._viewRect.height - this.getContentSize().height;
+        var contentH = this.getContentSize().height;
+        var viewH = this._viewRect.height;
+        if(viewH - contentH > 0) {
+            return 0;
+        }
+        return viewH - contentH;
     }
 
     isScrollable() {
@@ -238,6 +252,10 @@ export class ScrollView extends UIContainer {
             }
         }
         this._dragging = false;
+    }
+
+    _onContainerSizeChange() {
+
     }
 
     _tryBufferBackX() {
