@@ -6,25 +6,27 @@ export class UIContainer extends PIXI.Container {
     get isUIContainer() { return true; }
 
     get size() { return this._size; }
-    set size(value) {
-        this._size = value;
-        this.onSizeChange();
-        this.emit('sizechange');
-    }
 
     get layoutManager() { return this._layoutManager; }
-    set layoutManager(value) {
-        this._layoutManager = value;
-        if(this._layoutManager) {
-            this._layoutManager.setContainer(this);
-            this._layoutManager.requestLayout();
-        }
-    }
 
     constructor(width, height) {
         super();
         this._size = new Size(width, height);
         this._layoutManager = null;
+    }
+
+    setSize(size) {
+        this._size = size;
+        this.onSizeChange();
+        this.emit('sizechange');
+    }
+
+    setLayoutManager(layoutManager) {
+        this._layoutManager = layoutManager;
+        if(this._layoutManager) {
+            this._layoutManager.setContainer(this);
+            this._layoutManager.requestLayout();
+        }
     }
 
     updateTransform() {

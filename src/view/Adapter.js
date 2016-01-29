@@ -6,7 +6,7 @@ export class Adapter extends EventEmitter {
         return null;
     }
 
-    getView(key, convertView) {
+    getView(key, scrapView) {
         return null;
     }
 

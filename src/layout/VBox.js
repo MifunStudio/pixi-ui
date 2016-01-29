@@ -16,7 +16,7 @@ export class VBox extends LayoutManager {
         }
         size.height = start;
         size.width += this.padding.left + this.padding.right;
-        this.container.size = size;
+        this.container.setSize(size);
     }
 
 }

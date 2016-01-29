@@ -13,18 +13,29 @@ window.stage = stage;
 
 export class MyAdapter extends ArrayAdapter {
 
-    getView(key, convertView) {
-        var item = this.getItem(key);
-        return new PIXI.Text('item'+item, {
-            fill: '#FFFFFF',
-            font: 'normal 30px Arial'
-        });
+    getView(key, scrapView) {
+        let item = this.getItem(key);
+        let view = scrapView;
+        if(!view) {
+            view = new PIXI.Text('', {
+                fill: '#FFFFFF',
+                font: 'normal 30px Arial'
+            });
+        } else {
+            console.log('scrap view ', key);
+        }
+        view.text = 'item_' + key;
+        return view;
     }
 }
 
 
 var listView = new ListView();
 listView.setAdapter(new MyAdapter(["abc", "bcd"]));
+
+setTimeout(() => {
+    listView.getAdapter().data.push(Date.now());
+}, 1000);
 
 var scrollView = new ScrollView(500, 300, listView);
 

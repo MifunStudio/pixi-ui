@@ -16,7 +16,7 @@ export class HBox extends LayoutManager {
         }
         size.width = start;
         size.height += this.padding.top + this.padding.bottom;
-        this.container.size = size;
+        this.container.setSize(size);
     }
 
 }

@@ -1,12 +1,14 @@
 import PIXI from '@mifunstudio/pixi.js';
 import {AdapterView} from './AdapterView';
+import {Recycler} from './Recycler';
 import {HBox, VBox} from '../layout';
 
 export class ListView extends AdapterView {
 
     constructor(layoutManager) {
         super(0, 0);
-        this.layoutManager = layoutManager || new VBox();
+        this.setLayoutManager(layoutManager || new VBox());
+        this._recycler = new Recycler();
         this._buildListRequired = true;
     }
 
@@ -19,8 +21,25 @@ export class ListView extends AdapterView {
         this._buildListRequired = true;
     }
 
+    destroy(destroyChildren) {
+        super.destroy(destroyChildren);
+        this._recycler.clear();
+    }
+
     _handleDataChanged() {
         this.requestBuildList();
+    }
+
+    _removeChildrenToScrap() {
+        let recycler = this._recycler;
+        let adapter = this.getAdapter();
+        let children = this.children;
+        for(let i=0,len=children.length; i<len; i++) {
+            let view = children[i];
+            let viewType = adapter.getViewType(i);
+            this._recycler.addScrap(view, viewType);
+        }
+        this._removeChildren();
     }
 
     _buildList() {
@@ -28,11 +47,14 @@ export class ListView extends AdapterView {
         let adapter = this.getAdapter();
         if(!adapter) return;
 
-        this._removeChildren();
+        this._removeChildrenToScrap();
 
+        let recycler = this._recycler;
         let count = adapter.getCount();
         for(let i=0; i<count; i++) {
-            let view = adapter.getView(i, null);
+            let viewType = adapter.getViewType(i);
+            let scrapView = recycler.shiftScrap(viewType);
+            let view = adapter.getView(i, scrapView);
             this._addChildAt(view, i);
         }
 
