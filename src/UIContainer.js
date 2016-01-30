@@ -16,9 +16,15 @@ export class UIContainer extends PIXI.Container {
     }
 
     setSize(size) {
+        if(!this._size || !size || this._size === size) {
+            return;
+        }
+        if(this._size && this._size.equals(size)) {
+            return;
+        }
         this._size = size;
         this.onSizeChange();
-        this.emit('sizechange');
+        this.emitEvent('sizechange', true);
     }
 
     setLayoutManager(layoutManager) {
@@ -43,7 +49,6 @@ export class UIContainer extends PIXI.Container {
     }
 
     onSizeChange() {
-        this.emit('sizechange');
     }
 
     requestLayout() {

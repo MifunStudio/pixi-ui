@@ -1,4 +1,3 @@
-import 'object.observe';
 import {Adapter} from './Adapter';
 
 export class ArrayAdapter extends Adapter {
@@ -6,6 +5,26 @@ export class ArrayAdapter extends Adapter {
     constructor(rawArray) {
         super();
         this._rawArray = rawArray || [];
+    }
+
+    findItem(find) {
+        var found;
+        this.eachItem((item, index) => {
+            if(find(item, index)) {
+                found = item;
+                return false;
+            }
+        });
+        return found;
+    }
+
+    eachItem(iterator) {
+        if(!this._rawArray || this._rawArray.length === 0) return;
+        for(let i=0,len=this._rawArray.length; i<len; i++) {
+            if(false === iterator(this._rawArray[i], i)) {
+                return;
+            }
+        }
     }
 
     getCount() {

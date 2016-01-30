@@ -6,7 +6,7 @@ import {HBox, VBox} from '../layout';
 export class ListView extends AdapterView {
 
     constructor(layoutManager) {
-        super(0, 0);
+        super();
         this.setLayoutManager(layoutManager || new VBox());
         this._recycler = new Recycler();
         this._buildListRequired = true;

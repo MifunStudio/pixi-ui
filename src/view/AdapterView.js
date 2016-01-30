@@ -3,7 +3,7 @@ import {UIContainer} from '../UIContainer';
 export class AdapterView extends UIContainer {
 
     constructor() {
-        super();
+        super(0, 0);
     }
 
     addChild() {
@@ -40,7 +40,9 @@ export class AdapterView extends UIContainer {
             mAdater.off('datachanged', this._handleDataChanged, this);
         }
         this._adapter = adapter;
-        this._adapter.on('datachanged', this._handleDataChanged, this);
+        if(this._adapter) {
+            this._adapter.on('datachanged', this._handleDataChanged, this);
+        }
     }
 
     getAdapter() {
@@ -51,8 +53,8 @@ export class AdapterView extends UIContainer {
         super.addChildAt(child, index);
     }
 
-    _removeChildAt(child, index) {
-        super.removeChildAt(child, index);
+    _removeChildAt(index) {
+        super.removeChildAt(index);
     }
 
     _removeChildren() {

@@ -3,7 +3,8 @@ var path = require("path");
 module.exports = {
     entry: {
         ListView: './examples/ListView/index.js',
-        ScrollView: './examples/ScrollView/index.js'
+        ScrollView: './examples/ScrollView/index.js',
+        Button: './examples/Button/index.js'
     },
     output: {
         path: path.resolve(__dirname, ""),

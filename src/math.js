@@ -20,4 +20,8 @@ export class Size extends PIXI.Point {
     set width(value) { this.x = value; }
     set height(value) { this.y = value; }
 
+    clone() {
+        return new Size(this.width, this.height);
+    }
+
 }

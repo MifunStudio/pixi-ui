@@ -19,7 +19,12 @@ export class Adapter extends EventEmitter {
     }
 
     emitDataChanged() {
+        this._onDataChanged();
         this.emit('datachanged');
+    }
+
+    _onDataChanged() {
+
     }
 
 }
