@@ -21,10 +21,8 @@ export class MyAdapter extends ArrayAdapter {
                 fill: '#FFFFFF',
                 font: 'normal 30px Arial'
             });
-        } else {
-            console.log('scrap view ', key);
         }
-        view.text = 'item_' + key;
+        view.text = 'item_' + item;
         return view;
     }
 }
@@ -33,9 +31,7 @@ export class MyAdapter extends ArrayAdapter {
 var listView = new ListView();
 listView.setAdapter(new MyAdapter(["abc", "bcd"]));
 
-setTimeout(() => {
-    listView.getAdapter().data.push(Date.now());
-}, 1000);
+window.listView = listView;
 
 var scrollView = new ScrollView(500, 300, listView);
 
