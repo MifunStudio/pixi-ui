@@ -1,5 +1,6 @@
 import PIXI from '@mifunstudio/pixi.js';
 import * as UI from '../../src/UI';
+import '../../src/UIStage';
 import {SlideView, HORIZONTAL, VERTICAL} from '../../src/view/SlideView';
 import {Image} from '../../src/view/Image';
 import {ArrayAdapter} from '../../src/view/ArrayAdapter';

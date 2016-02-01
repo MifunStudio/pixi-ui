@@ -1,6 +1,11 @@
 import PIXI from '@mifunstudio/pixi.js';
-import {Size} from './math';
 import {UIContainer} from './UIContainer';
+import {Size} from './math';
+import * as UI from './UI';
+
+UI.setUIStageFactory(function(stage) {
+    return new UIStage(stage);
+});
 
 export class UIStage extends UIContainer {
 

@@ -1,4 +1,6 @@
 import PIXI from '@mifunstudio/pixi.js';
+import '../../src/UIStage';
+import * as UI from '../../src/UI';
 import {ListView} from '../../src/view/ListView';
 import {ScrollView} from '../../src/view/ScrollView';
 import {ArrayAdapter} from '../../src/view/ArrayAdapter';
@@ -10,6 +12,9 @@ var stage = new PIXI.Stage({
 });
 stage.ticker.start();
 window.stage = stage;
+
+
+let uiStage = UI.createUIStage(stage);
 
 export class MyAdapter extends ArrayAdapter {
 
@@ -29,10 +34,13 @@ export class MyAdapter extends ArrayAdapter {
 
 
 var listView = new ListView();
-listView.setAdapter(new MyAdapter(["abc", "bcd"]));
+listView.setAdapter(new MyAdapter([
+    "abc", "bcd","bcd","bcd","bcd","bcd","bcd","bcd","bcd","bcd"
+]));
 
 window.listView = listView;
 
 var scrollView = new ScrollView(500, 300, listView);
+uiStage.addChild(scrollView);
 
-stage.addChild(scrollView);
+stage.addChild(uiStage);

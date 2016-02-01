@@ -1,4 +1,5 @@
 import PIXI from '@mifunstudio/pixi.js';
+import '../../src/UIStage';
 import {ListView} from '../../src/view/ListView';
 import {SimpleButton} from '../../src/view/SimpleButton';
 import {SimpleCheckbox} from '../../src/view/SimpleCheckbox';

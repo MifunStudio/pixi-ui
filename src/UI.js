@@ -1,6 +1,7 @@
-import {UIStage} from './UIStage';
+import {Size} from './math';
 
 let uiStage;
+let uiStageFactory;
 
 export function getWidth(ui) {
     if(ui.isUIContainer) {
@@ -24,8 +25,12 @@ export function getSize(ui) {
 }
 
 export function createUIStage(stage) {
-    uiStage = new UIStage(stage);
+    uiStage = uiStageFactory(stage);
     return uiStage;
+}
+
+export function setUIStageFactory(factory) {
+    uiStageFactory = factory;
 }
 
 export function getUIStage() {

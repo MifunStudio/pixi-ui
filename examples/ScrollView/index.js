@@ -1,5 +1,6 @@
 import PIXI from '@mifunstudio/pixi.js';
 import * as UI from '../../src/UI';
+import '../../src/UIStage';
 import {ScrollView, HORIZONTAL, VERTICAL} from '../../src/view/ScrollView';
 import {Image} from '../../src/view/Image';
 
@@ -16,7 +17,6 @@ stage.addChild(uiStage);
 
 var sprite = new Image(PIXI.Texture.fromImage('images/pig.jpg'));
 var scrollView = new ScrollView(500, 300, sprite);
-scrollView.direction = VERTICAL;
 scrollView.position.set(50, 50);
 
 console.log(scrollView);
