@@ -1,5 +1,6 @@
 import {LayoutManager} from '../LayoutManager';
 import {Size} from '../math';
+import * as UI from '../UI';
 
 export class VBox extends LayoutManager {
 
@@ -11,8 +12,8 @@ export class VBox extends LayoutManager {
             let child = children[i];
             start += this.childMargin.top;
             child.position.y = start;
-            start += this.getUIHeight(child) + this.childMargin.right;
-            size.width = Math.max(this.getUIWidth(child), size.width);
+            start += UI.getHeight(child) + this.childMargin.right;
+            size.width = Math.max(UI.getWidth(child), size.width);
         }
         size.height = start;
         size.width += this.padding.left + this.padding.right;

@@ -2,6 +2,7 @@ import PIXI from '@mifunstudio/pixi.js';
 import {AdapterView} from './AdapterView';
 import {StateAdapter} from './StateAdapter';
 import {Size} from '../math';
+import * as UI from '../UI';
 
 export class StateView extends AdapterView {
 
@@ -43,14 +44,6 @@ export class StateView extends AdapterView {
         }
     }
 
-    getUISize(ui) {
-        if(ui.isUIContainer) {
-            return ui.size;
-        } else {
-            return new Size(ui.width || 0, ui.height || 0);
-        }
-    }
-
     _destroyStateViews() {
         let adapter = this.getAdapter();
         adapter.eachItem((item) => {
@@ -66,7 +59,7 @@ export class StateView extends AdapterView {
             this.setSize(new Size(0, 0));
             return;
         }
-        this.setSize(this.getUISize(this._currentView).clone());
+        this.setSize(UI.getSize(this._currentView).clone());
     }
 
     _handleStateChanged() {

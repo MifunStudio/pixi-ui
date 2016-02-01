@@ -1,5 +1,6 @@
 import {LayoutManager} from '../LayoutManager';
 import {Size} from '../math';
+import * as UI from '../UI';
 
 export class HBox extends LayoutManager {
 
@@ -11,8 +12,8 @@ export class HBox extends LayoutManager {
             let child = children[i];
             start += this.childMargin.left;
             child.position.x = start;
-            start += this.getUIWidth(child) + this.childMargin.right;
-            size.height = Math.max(this.getUIHeight(child), size.height);
+            start += UI.getWidth(child) + this.childMargin.right;
+            size.height = Math.max(UI.getHeight(child), size.height);
         }
         size.width = start;
         size.height += this.padding.top + this.padding.bottom;

@@ -38,7 +38,7 @@ export class ScrollView extends UIContainer {
         this.interactive = true;
         this.onSizeChange();
 
-        this._direction = ScrollView.VERTICAL;
+        this._direction = BOTH;
         this._enabled = true;
         this._bufferBackEnabled = true;
         this._momentumEnabled = true;
@@ -76,6 +76,7 @@ export class ScrollView extends UIContainer {
             this.addChild(this._container);
             this._container.on('sizechange', this._onContainerSizeChange, this);
         }
+        this.clearScrollTweens();
     }
 
     destroy(destroyChildren) {
@@ -187,7 +188,7 @@ export class ScrollView extends UIContainer {
     onPanMove(e) {
         if(!this.isScrollable() || !this._dragging) return;
         var container = this._container;
-        if(this._direction === ScrollView.BOTH || this._direction === ScrollView.HORIZONTAL) {
+        if(this._direction === BOTH || this._direction === HORIZONTAL) {
             var deltaX = e.x - this._values.lastDragX;
             var minScrollX = this.getMinScrollX();
             if(minScrollX === 0 ||
@@ -201,7 +202,7 @@ export class ScrollView extends UIContainer {
                 container.x = middle(container.x, minScrollX, 0);
             }
         }
-        if(this._direction === ScrollView.BOTH || this._direction === ScrollView.VERTICAL) {
+        if(this._direction === BOTH || this._direction === VERTICAL) {
             var deltaY = e.y - this._values.lastDragY;
             var minScrollY = this.getMinScrollY();
             if(minScrollY === 0 ||
@@ -215,11 +216,13 @@ export class ScrollView extends UIContainer {
                 container.y = middle(container.y, minScrollY, 0);
             }
         }
+
+        this.invalidate();
     }
 
     onPanEnd(e) {
         if(!this.isScrollable() || !this._dragging) return;
-        if(this._direction === ScrollView.BOTH || this._direction === ScrollView.HORIZONTAL) {
+        if(this._direction === BOTH || this._direction === HORIZONTAL) {
             if(!this._tryBufferBackX()) {
                 if(this._momentumEnabled) {
                     this._values.velocityX = e.hammerEvent.velocityX;
@@ -228,14 +231,16 @@ export class ScrollView extends UIContainer {
                     }
                     this._values.momentumXTween = Tween.get(this._values).to({
                         velocityX: 0
-                    }, 1000);
+                    }, 1000).call(() => {
+                        this._values.momentumXTween = null;
+                    });
                 } else {
                     this._values.velocityX = 0;
                     this._values.momentumY = 0;
                 }
             }
         }
-        if(this._direction === ScrollView.BOTH || this._direction === ScrollView.VERTICAL) {
+        if(this._direction === BOTH || this._direction === VERTICAL) {
             if(!this._tryBufferBackY()) {
                 if(this._momentumEnabled) {
                     this._values.velocityY = e.hammerEvent.velocityY;
@@ -244,7 +249,9 @@ export class ScrollView extends UIContainer {
                     }
                     this._values.momentumYTween = Tween.get(this._values).to({
                         velocityY: 0
-                    }, 1000);
+                    }, 1000).call(() => {
+                        this._values.momentumYTween = null;
+                    });
                 } else {
                     this._values.velocityY = 0;
                     this._values.momentumY = 0;
@@ -270,7 +277,7 @@ export class ScrollView extends UIContainer {
             }
             this._values.bufferXTween = container.tween(false).to({
                 x : 0
-            }, 100);
+            }, 100).callRemove();
             return true;
         }
         else if(container.x < minScrollX) {
@@ -279,7 +286,7 @@ export class ScrollView extends UIContainer {
             }
             this._values.bufferXTween = container.tween(false).to({
                 x : minScrollX
-            }, 100);
+            }, 100).callRemove();
             return true;
         }
         return false;
@@ -297,7 +304,7 @@ export class ScrollView extends UIContainer {
             }
             this._values.bufferYTween = container.tween(false).to({
                 y : 0
-            }, 100);
+            }, 100).callRemove();
             return true;
         }
         else if(container.y < minScrollY) {
@@ -306,10 +313,22 @@ export class ScrollView extends UIContainer {
             }
             this._values.bufferYTween = container.tween(false).to({
                 y : minScrollY
-            }, 100);
+            }, 100).callRemove();
             return true;
         }
         return false;
+    }
+
+    _tickScrollTweens() {
+        if (this._values.momentumXTween) {
+            this._values.momentumXTween.tick(ticker.elapsedMS);
+        }
+        if (this._values.momentumYTween) {
+            this._values.momentumYTween.tick(ticker.elapsedMS);
+        }
+        if(this._values.momentumXTween || this._values.momentumYTween) {
+            this.invalidate();
+        }
     }
 
     _updateScroll() {
@@ -317,64 +336,40 @@ export class ScrollView extends UIContainer {
 
         if(!this._bufferBackEnabled && !this._momentumEnabled) return;
 
+        this._tickScrollTweens();
+
         let container = this._container;
-        if(this._direction === ScrollView.BOTH || this._direction === ScrollView.HORIZONTAL) {
+        if(this._direction === BOTH || this._direction === HORIZONTAL) {
             container.x += (this._values.velocityX + this._values.momentumX) * ticker.elapsedMS;
             var minScrollX = this.getMinScrollX();
             if(!this._bufferBackEnabled) {
                 container.x = middle(container.x, minScrollX, 0);
             }
-            var bufferMomentumX = false;
             if (container.x > 0 && this._values.velocityX !== 0 || this._bufferBackCheckRequired) {
                 container.x = 0;
-                this._values.momentumX = this._values.velocityX;
-                bufferMomentumX = true;
+                this._values.momentumX = this._values.velocityX = 0;
                 this._bufferBackCheckRequired = false;
             } else if (container.x < minScrollX && this._values.velocityX !== 0 || this._bufferBackCheckRequired) {
                 container.x = minScrollX;
-                this._values.momentumX = this._values.velocityX;
-                bufferMomentumX = true;
+                this._values.momentumX = this._values.velocityX = 0;
                 this._bufferBackCheckRequired = false;
-            }
-            if (bufferMomentumX) {
-                if (this._values.momentumXTween) {
-                    this._values.momentumXTween.setPaused(true);
-                }
-                this._values.momentumXTween = Tween.get(this._values).to({
-                    momentumX: 0
-                }, 100).call(() => {
-                    this._tryBufferBackX();
-                });
             }
         }
 
-        if(this._direction === ScrollView.BOTH || this._direction === ScrollView.VERTICAL) {
+        if(this._direction === BOTH || this._direction === VERTICAL) {
             container.y += (this._values.velocityY + this._values.momentumY) * ticker.elapsedMS;
             var minScrollY = this.getMinScrollY();
             if(!this._bufferBackEnabled) {
                 container.y = middle(container.y, minScrollY, 0);
             }
-            var bufferMomentumY = false;
             if(container.y > 0 && this._values.velocityY !== 0 || this._bufferBackCheckRequired) {
                 container.y = 0;
-                this._values.momentumY = this._values.velocityY;
-                bufferMomentumY = true;
+                this._values.momentumY = this._values.velocityY = 0;
                 this._bufferBackCheckRequired = false;
             } else if(container.y < minScrollY && this._values.velocityY !== 0 || this._bufferBackCheckRequired) {
                 container.y = minScrollY;
-                this._values.momentumY = this._values.velocityY;
-                bufferMomentumY = true;
+                this._values.momentumY = this._values.velocityY = 0;
                 this._bufferBackCheckRequired = false;
-            }
-            if(bufferMomentumY) {
-                if(this._values.momentumYTween) {
-                    this._values.momentumYTween.setPaused(true);
-                }
-                this._values.momentumYTween = Tween.get(this._values).to({
-                    momentumY: 0
-                }, 100).call(() => {
-                    this._tryBufferBackY();
-                });
             }
         }
     }

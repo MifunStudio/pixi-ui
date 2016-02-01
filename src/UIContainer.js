@@ -1,5 +1,6 @@
 import PIXI from '@mifunstudio/pixi.js';
 import {Size} from './math';
+import * as UI from './UI';
 
 export class UIContainer extends PIXI.Container {
 
@@ -13,6 +14,22 @@ export class UIContainer extends PIXI.Container {
         super();
         this._size = new Size(width, height);
         this._layoutManager = null;
+    }
+
+    invalidate() {
+        UI.invalidateUIStage();
+    }
+
+    updateTransform() {
+        super.updateTransform();
+        if(this.hasActivedTweens()) {
+            console.log('invalidate');
+            this.invalidate();
+        }
+    }
+
+    hasActivedTweens() {
+        return this.tweenTransform.tweens.length > 0;
     }
 
     setSize(size) {
@@ -46,13 +63,16 @@ export class UIContainer extends PIXI.Container {
 
     onChildrenChange() {
         this.requestLayout();
+        this.invalidate();
     }
 
     onSizeChange() {
     }
 
     requestLayout() {
-        this._layoutManager && this._layoutManager.requestLayout();
+        if(this._layoutManager) {
+            this._layoutManager.requestLayout();
+        }
     }
 
     onLayout() {

@@ -34,18 +34,4 @@ export class LayoutManager {
 
     }
 
-    getUIWidth(ui) {
-        if(ui.isUIContainer) {
-            return ui.size.width;
-        }
-        return ui.width || 0;
-    }
-
-    getUIHeight(ui) {
-        if(ui.isUIContainer) {
-            return ui.size.height;
-        }
-        return ui.height || 0;
-    }
-
 }
