@@ -12,7 +12,7 @@ export class UIContainer extends PIXI.Container {
 
     constructor(width, height) {
         super();
-        this._size = new Size(width, height);
+        this._size = new Size(width || 100, height || 100);
         this._layoutManager = null;
     }
 

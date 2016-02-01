@@ -62,7 +62,6 @@ export class ScrollView extends UIContainer {
         this.on('panstart', this.onPanStart, this);
         this.on('panmove', this.onPanMove, this);
         this.on('panend', this.onPanEnd, this);
-
         this.setContainer(container);
     }
 
@@ -83,7 +82,7 @@ export class ScrollView extends UIContainer {
         this.off('panstart', this.onPanStart, this);
         this.off('panmove', this.onPanMove, this);
         this.off('panend', this.onPanEnd, this);
-        this.clearTweens();
+        this.clearScrollTweens();
         super.destroy(destroyChildren);
     }
 
@@ -221,6 +220,7 @@ export class ScrollView extends UIContainer {
     }
 
     onPanEnd(e) {
+        console.log('end');
         if(!this.isScrollable() || !this._dragging) return;
         if(this._direction === BOTH || this._direction === HORIZONTAL) {
             if(!this._tryBufferBackX()) {
