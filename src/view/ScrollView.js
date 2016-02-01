@@ -261,7 +261,7 @@ export class ScrollView extends UIContainer {
     }
 
     _onContainerSizeChange() {
-
+        this.invalidate();
     }
 
     _tryBufferBackX() {

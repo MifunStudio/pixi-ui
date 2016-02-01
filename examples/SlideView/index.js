@@ -2,7 +2,7 @@ import PIXI from '@mifunstudio/pixi.js';
 import * as UI from '../../src/UI';
 import '../../src/UIStage';
 import {SlideView, HORIZONTAL, VERTICAL} from '../../src/view/SlideView';
-import {Image} from '../../src/view/Image';
+import {ImageView} from '../../src/view/ImageView';
 import {ArrayAdapter} from '../../src/view/ArrayAdapter';
 import {Size} from '../../src/math';
 
@@ -24,13 +24,10 @@ export class MyAdapter extends ArrayAdapter {
         let item = this.getItem(key);
         let view = scrapView;
         if(!view) {
-            view = new PIXI.Text('', {
-                fill: '#FFFFFF',
-                font: 'normal 80px Arial'
-            });
+            view = new ImageView();
             view.anchor.set(0.5);
         }
-        view.text = 'item_' + item;
+        view.texture = PIXI.Texture.fromImage(item);
         return view;
     }
 }
@@ -38,8 +35,8 @@ export class MyAdapter extends ArrayAdapter {
 let slideView = new SlideView(HORIZONTAL, new Size(500, 500));
 console.log(slideView);
 slideView.setAdapter(new MyAdapter([
-    'item1',
-    'item2'
+    'images/280.png',
+    'images/finder.png'
 ]));
 
 uiStage.addChild(slideView);
