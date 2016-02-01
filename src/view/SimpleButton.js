@@ -1,5 +1,6 @@
 import PIXI from '@mifunstudio/pixi.js';
 import {Button} from './Button';
+import {ImageView} from './ImageView'
 import {Size} from '../math';
 
 export class SimpleButton extends Button {
@@ -24,21 +25,21 @@ export class SimpleButton extends Button {
             pressTexture = normalTexture;
         }
 
-        let normalSprite = new PIXI.Sprite(normalTexture);
-        normalSprite.anchor.set(0.5);
-        normalSprite.interactive = true;
+        let normalImageView = new ImageView(normalTexture);
+        normalImageView.anchor.set(0.5);
+        normalImageView.interactive = true;
 
-        let pressSprite = new PIXI.Sprite(pressTexture);
-        pressSprite.anchor.set(0.5);
-        pressSprite.interactive = true;
+        let pressImageView = new ImageView(pressTexture);
+        pressImageView.anchor.set(0.5);
+        pressImageView.interactive = true;
 
         this.getAdapter().addAll([{
             state: 'normal',
             isDefault: true,
-            view: normalSprite
+            view: normalImageView
         }, {
             state: 'press',
-            view: pressSprite
+            view: pressImageView
         }]);
     }
 
