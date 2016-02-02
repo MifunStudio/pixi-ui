@@ -5,7 +5,8 @@ module.exports = {
         ListView: './examples/ListView/index.js',
         ScrollView: './examples/ScrollView/index.js',
         Button: './examples/Button/index.js',
-        SlideView: './examples/SlideView/index.js'
+        SlideView: './examples/SlideView/index.js',
+        Progress: './examples/Progress/index.js'
     },
     output: {
         path: path.resolve(__dirname, ""),
