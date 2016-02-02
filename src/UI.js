@@ -9,7 +9,7 @@ export const ALIGN_MIDDLE = 'middle';
 export const ALIGN_BOTTOM = 'bottom';
 export const ALIGN_NONE = 'none';
 
-export var debugDraw = true;
+export var debugDraw = false;
 export var debugDrawGraphics = null;
 
 export function debugDrawUIContainer(renderer, uiContainer, color) {
