@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/MifunStudio/pixi-ui#readme",
   "dependencies": {
-    "@mifunstudio/pixi.js": "^3.2.2"
+    "@mifunstudio/pixi.js": "^3.3.3"
   },
   "devDependencies": {
     "babel-polyfill": "^6.3.14",

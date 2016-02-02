@@ -1,8 +1,6 @@
 import PIXI from '@mifunstudio/pixi.js';
 import * as UI from '../UI';
 
-console.log(PIXI.Sprite);
-
 export class ImageView extends PIXI.Sprite {
 
     updateTransform() {

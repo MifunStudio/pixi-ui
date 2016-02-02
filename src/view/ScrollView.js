@@ -220,6 +220,7 @@ export class ScrollView extends UIContainer {
     }
 
     onPanEnd(e) {
+        console.log('panend');
         if(!this.isScrollable() || !this._dragging) return;
         if(this._direction === BOTH || this._direction === HORIZONTAL) {
             if(!this._tryBufferBackX()) {
