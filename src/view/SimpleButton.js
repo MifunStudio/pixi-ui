@@ -1,6 +1,6 @@
 import PIXI from '@mifunstudio/pixi.js';
 import {Button} from './Button';
-import {ImageView} from './ImageView'
+import {ImageView} from './ImageView';
 import {Size} from '../math';
 
 export class SimpleButton extends Button {
@@ -21,17 +21,17 @@ export class SimpleButton extends Button {
 
     constructor(normalTexture, pressTexture) {
         super();
-        if(!pressTexture) {
-            pressTexture = normalTexture;
-        }
 
         let normalImageView = new ImageView(normalTexture);
         normalImageView.anchor.set(0.5);
         normalImageView.interactive = true;
 
-        let pressImageView = new ImageView(pressTexture);
-        pressImageView.anchor.set(0.5);
-        pressImageView.interactive = true;
+        let pressImageView;
+        if(!pressTexture) {
+            pressImageView = new ImageView(pressTexture);
+            pressImageView.anchor.set(0.5);
+            pressImageView.interactive = true;
+        }
 
         this.getAdapter().addAll([{
             state: 'normal',
@@ -39,7 +39,7 @@ export class SimpleButton extends Button {
             view: normalImageView
         }, {
             state: 'press',
-            view: pressImageView
+            view: pressImageView || normalImageView
         }]);
     }
 
@@ -54,7 +54,7 @@ export class SimpleButton extends Button {
         let texture = view.texture;
         if(!texture.baseTexture.hasLoaded) {
             texture.once('update', () => {
-                this.setSize(new Size(view.width, view.height));
+                this._updateSize();
             });
         }
     }

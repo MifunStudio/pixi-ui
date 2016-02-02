@@ -1,6 +1,7 @@
 import PIXI from '@mifunstudio/pixi.js';
 import * as UI from '../../src/UI';
 import '../../src/UIStage';
+import {Relative} from '../../src/layout/Relative';
 import {ProgressBar, L2R, R2L, U2D, D2U, CLOCK, ANTI_CLOCK} from '../../src/view/ProgressBar';
 
 var stage = new PIXI.Stage({
@@ -11,6 +12,7 @@ stage.ticker.start();
 window.stage = stage;
 
 let uiStage = UI.createUIStage(stage);
+uiStage.setLayoutManager(new Relative());
 stage.addChild(uiStage);
 
 let direction = [CLOCK, ANTI_CLOCK, L2R, R2L, U2D, D2U];
@@ -27,8 +29,9 @@ let progressBar = new ProgressBar(
     PIXI.Texture.fromImage('images/finder.png')
 );
 
-progressBar.position.set(100, 100);
+// progressBar.position.set(100, 100);
 progressBar.setOffset(new PIXI.Point(0, 16));
+progressBar.setAlign(UI.ALIGN_CENTER);
 uiStage.addChild(progressBar);
 
 stage.scheduler.loop(() => {

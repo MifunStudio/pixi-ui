@@ -1,4 +1,6 @@
 import {Checkbox} from './Checkbox';
+import {Size} from '../math';
+import {ImageView} from './ImageView';
 
 export class SimpleCheckbox extends Checkbox {
 
@@ -19,11 +21,11 @@ export class SimpleCheckbox extends Checkbox {
     constructor(uncheckedTexture, checkedTexture) {
         super();
 
-        let uncheckedSprite = new PIXI.Sprite(uncheckedTexture);
+        let uncheckedSprite = new ImageView(uncheckedTexture);
         uncheckedSprite.anchor.set(0.5);
         uncheckedSprite.interactive = true;
 
-        let checkedSprite = new PIXI.Sprite(checkedTexture);
+        let checkedSprite = new ImageView(checkedTexture);
         checkedSprite.anchor.set(0.5);
         checkedSprite.interactive = true;
 
@@ -35,6 +37,22 @@ export class SimpleCheckbox extends Checkbox {
             state: 'checked',
             view: checkedSprite
         }]);
+    }
+
+    setCurrentView(view) {
+        super.setCurrentView(view);
+        this._checkTextureLoaded();
+    }
+
+    _checkTextureLoaded() {
+        let view = this.getCurrentView();
+        if(!view || !view.texture) return;
+        let texture = view.texture;
+        if(!texture.baseTexture.hasLoaded) {
+            texture.once('update', () => {
+                this._updateSize();
+            });
+        }
     }
 
 }

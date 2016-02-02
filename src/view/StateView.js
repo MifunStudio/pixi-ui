@@ -64,6 +64,7 @@ export class StateView extends AdapterView {
 
     _handleStateChanged() {
         this.setCurrentView(this.getAdapter().getCurrentStateView());
+        this.invalidate();
     }
 
 

@@ -10,10 +10,38 @@ export class UIContainer extends PIXI.Container {
 
     get layoutManager() { return this._layoutManager; }
 
+    get align() { return this._align; }
+    get alignWidth() { return 0; }
+
+    get valign() { return this._valign; }
+    get valignHeight() { return 0; }
+
     constructor(width, height) {
         super();
         this._size = new Size(width || 100, height || 100);
         this._layoutManager = null;
+        this._align = UI.ALIGN_NONE;
+        this._valign = UI.ALIGN_NONE;
+    }
+
+    renderWebGL(renderer) {
+        super.renderWebGL(renderer);
+        if(UI.debugDraw) {
+            UI.debugDrawUIContainer(renderer, this);
+        }
+    }
+
+    setAlign(align, valign) {
+        this._align = align;
+        if(valign) {
+            this._valign = valign;
+        }
+        this.emitEvent('alignchange', true);
+    }
+
+    setValign(valign) {
+        this._valign = valign;
+        this.emitEvent('alignchange', true);
     }
 
     invalidate() {

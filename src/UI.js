@@ -1,4 +1,32 @@
+import PIXI from '@mifunstudio/pixi.js';
 import {Size} from './math';
+
+export const ALIGN_START = 'start';
+export const ALIGN_CENTER = 'center';
+export const ALIGN_END = 'end';
+export const ALIGN_TOP = 'top';
+export const ALIGN_MIDDLE = 'middle';
+export const ALIGN_BOTTOM = 'bottom';
+export const ALIGN_NONE = 'none';
+
+export var debugDraw = true;
+export var debugDrawGraphics = null;
+
+export function debugDrawUIContainer(renderer, uiContainer, color) {
+    let size = uiContainer.size
+    if(size.width === 0 || size.height === 0) return;
+    debugDrawGraphics = debugDrawGraphics || new PIXI.Graphics();
+    debugDrawGraphics.clear();
+    debugDrawGraphics.lineStyle(1, color || 0xFF00FF);
+    debugDrawGraphics.drawRect(0, 0, size.width, size.height);
+    uiContainer.worldTransform.copy(debugDrawGraphics.worldTransform);
+    if(renderer.type === PIXI.RENDERER_TYPE.WEBGL) {
+        debugDrawGraphics.renderWebGL(renderer);
+    } else {
+        debugDrawGraphics.renderCanvas(renderer);
+    }
+}
+
 
 let uiStage;
 let uiStageFactory;
