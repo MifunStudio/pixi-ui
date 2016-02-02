@@ -11,10 +11,10 @@ export class UIContainer extends PIXI.Container {
     get layoutManager() { return this._layoutManager; }
 
     get align() { return this._align; }
-    get alignWidth() { return 0; }
+    get alignWidth() { return this.size.width; }
 
     get valign() { return this._valign; }
-    get valignHeight() { return 0; }
+    get valignHeight() { return this.size.height; }
 
     constructor(width, height) {
         super();
@@ -26,6 +26,13 @@ export class UIContainer extends PIXI.Container {
 
     renderWebGL(renderer) {
         super.renderWebGL(renderer);
+        if(UI.debugDraw) {
+            UI.debugDrawUIContainer(renderer, this);
+        }
+    }
+
+    renderCanvas(renderer) {
+        super.renderCanvas(renderer);
         if(UI.debugDraw) {
             UI.debugDrawUIContainer(renderer, this);
         }
