@@ -96,6 +96,7 @@ export class ScrollView extends UIContainer {
         this._clipRect = new PIXI.Rectangle(0, 0, this.size.width, this.size.height);
         this.hitArea = this._viewRect;
         this.updateClipMask();
+        super.onSizeChange();
     }
 
     updateClipMask() {

@@ -63,7 +63,9 @@ module.exports =
 	
 	    UI: __webpack_require__(4),
 	
-	    UIStage: __webpack_require__(5).UIStage,
+	    UIContainer: __webpack_require__(5).UIContainer,
+	
+	    UIStage: __webpack_require__(6).UIStage,
 	
 	    layout: __webpack_require__(7),
 	
@@ -344,138 +346,6 @@ module.exports =
 
 	'use strict';
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.UIStage = undefined;
-	
-	var _pixi = __webpack_require__(1);
-	
-	var _pixi2 = _interopRequireDefault(_pixi);
-	
-	var _UIContainer2 = __webpack_require__(6);
-	
-	var _math = __webpack_require__(3);
-	
-	var _UI = __webpack_require__(4);
-	
-	var UI = _interopRequireWildcard(_UI);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	UI.setUIStageFactory(function (stage) {
-	    return new UIStage(stage);
-	});
-	
-	var UIStage = exports.UIStage = function (_UIContainer) {
-	    _inherits(UIStage, _UIContainer);
-	
-	    function UIStage(stage) {
-	        _classCallCheck(this, UIStage);
-	
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UIStage).call(this));
-	
-	        _this.stage = stage;
-	        _this._bounds = new _pixi2.default.Rectangle(0, 0, 0, 0);
-	        _this._frameEnd = false;
-	
-	        _this._doRenderChildren = false;
-	        _this._renderTexture = new _pixi2.default.RenderTexture(_this.stage.renderer, _this.stage.viewport.width, _this.stage.viewport.height);
-	        _this._renderSprite = new _pixi2.default.Sprite(_this._renderTexture);
-	
-	        _this._onViewportResize();
-	        _this._updateRenderTexture();
-	        _this.stage.on('viewport.resize', _this._onViewportResize, _this);
-	        return _this;
-	    }
-	
-	    _createClass(UIStage, [{
-	        key: 'getLocalBounds',
-	        value: function getLocalBounds() {
-	            return this._bounds;
-	        }
-	    }, {
-	        key: 'invalidate',
-	        value: function invalidate() {
-	            var _this2 = this;
-	
-	            if (!this._renderSchedule) {
-	                this._renderSchedule = this.stage.scheduler.frame(function () {
-	                    _this2._renderToRenderTexture();
-	                    _this2._renderSchedule = null;
-	                    console.log('invalidate');
-	                }, 0);
-	            }
-	        }
-	    }, {
-	        key: 'renderCanvas',
-	        value: function renderCanvas(renderer) {
-	            if (this._doRenderChildren) {
-	                _get(Object.getPrototypeOf(UIStage.prototype), 'renderCanvas', this).call(this, renderer);
-	            } else {
-	                this._renderSprite.renderCanvas(renderer);
-	            }
-	        }
-	    }, {
-	        key: 'renderWebGL',
-	        value: function renderWebGL(renderer) {
-	            if (this._doRenderChildren) {
-	                _get(Object.getPrototypeOf(UIStage.prototype), 'renderWebGL', this).call(this, renderer);
-	            } else {
-	                this._renderSprite.renderWebGL(renderer);
-	            }
-	        }
-	    }, {
-	        key: 'destroy',
-	        value: function destroy(destroyChildren) {
-	            this._renderSprite.destroy(true);
-	            _get(Object.getPrototypeOf(UIStage.prototype), 'destroy', this).call(this, destroyChildren);
-	            this.stage.off('viewport.resize', this._onViewportResize, this);
-	        }
-	    }, {
-	        key: '_renderToRenderTexture',
-	        value: function _renderToRenderTexture() {
-	            this._doRenderChildren = true;
-	            this._renderTexture.render(this, this.stage.worldTransform, true);
-	            this._doRenderChildren = false;
-	        }
-	    }, {
-	        key: '_updateRenderTexture',
-	        value: function _updateRenderTexture() {
-	            this._renderTexture.resize(this._bounds.width, this._bounds.height, true);
-	            this.invalidate();
-	        }
-	    }, {
-	        key: '_onViewportResize',
-	        value: function _onViewportResize() {
-	            this._bounds.width = this.stage.viewport.width;
-	            this._bounds.height = this.stage.viewport.height;
-	            this.setSize(new _math.Size(this.stage.viewport.width, this.stage.viewport.height));
-	            this._updateRenderTexture();
-	        }
-	    }]);
-	
-	    return UIStage;
-	}(_UIContainer2.UIContainer);
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -647,7 +517,10 @@ module.exports =
 	        }
 	    }, {
 	        key: 'onSizeChange',
-	        value: function onSizeChange() {}
+	        value: function onSizeChange() {
+	            this.requestLayout();
+	            this.invalidate();
+	        }
 	    }, {
 	        key: 'requestLayout',
 	        value: function requestLayout() {
@@ -664,6 +537,138 @@ module.exports =
 	
 	    return UIContainer;
 	}(_pixi2.default.Container);
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.UIStage = undefined;
+	
+	var _pixi = __webpack_require__(1);
+	
+	var _pixi2 = _interopRequireDefault(_pixi);
+	
+	var _UIContainer2 = __webpack_require__(5);
+	
+	var _math = __webpack_require__(3);
+	
+	var _UI = __webpack_require__(4);
+	
+	var UI = _interopRequireWildcard(_UI);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	UI.setUIStageFactory(function (stage) {
+	    return new UIStage(stage);
+	});
+	
+	var UIStage = exports.UIStage = function (_UIContainer) {
+	    _inherits(UIStage, _UIContainer);
+	
+	    function UIStage(stage) {
+	        _classCallCheck(this, UIStage);
+	
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UIStage).call(this));
+	
+	        _this.stage = stage;
+	        _this._bounds = new _pixi2.default.Rectangle(0, 0, 0, 0);
+	        _this._frameEnd = false;
+	
+	        _this._doRenderChildren = false;
+	        _this._renderTexture = new _pixi2.default.RenderTexture(_this.stage.renderer, _this.stage.viewport.width, _this.stage.viewport.height);
+	        _this._renderSprite = new _pixi2.default.Sprite(_this._renderTexture);
+	
+	        _this._onViewportResize();
+	        _this._updateRenderTexture();
+	        _this.stage.on('viewport.resize', _this._onViewportResize, _this);
+	        return _this;
+	    }
+	
+	    _createClass(UIStage, [{
+	        key: 'getLocalBounds',
+	        value: function getLocalBounds() {
+	            return this._bounds;
+	        }
+	    }, {
+	        key: 'invalidate',
+	        value: function invalidate() {
+	            var _this2 = this;
+	
+	            if (!this._renderSchedule) {
+	                this._renderSchedule = this.stage.scheduler.frame(function () {
+	                    _this2._renderToRenderTexture();
+	                    _this2._renderSchedule = null;
+	                    console.log('invalidate');
+	                }, 0);
+	            }
+	        }
+	    }, {
+	        key: 'renderCanvas',
+	        value: function renderCanvas(renderer) {
+	            if (this._doRenderChildren) {
+	                _get(Object.getPrototypeOf(UIStage.prototype), 'renderCanvas', this).call(this, renderer);
+	            } else {
+	                this._renderSprite.renderCanvas(renderer);
+	            }
+	        }
+	    }, {
+	        key: 'renderWebGL',
+	        value: function renderWebGL(renderer) {
+	            if (this._doRenderChildren) {
+	                _get(Object.getPrototypeOf(UIStage.prototype), 'renderWebGL', this).call(this, renderer);
+	            } else {
+	                this._renderSprite.renderWebGL(renderer);
+	            }
+	        }
+	    }, {
+	        key: 'destroy',
+	        value: function destroy(destroyChildren) {
+	            this._renderSprite.destroy(true);
+	            _get(Object.getPrototypeOf(UIStage.prototype), 'destroy', this).call(this, destroyChildren);
+	            this.stage.off('viewport.resize', this._onViewportResize, this);
+	        }
+	    }, {
+	        key: '_renderToRenderTexture',
+	        value: function _renderToRenderTexture() {
+	            this._doRenderChildren = true;
+	            this._renderTexture.render(this, this.stage.worldTransform, true);
+	            this._doRenderChildren = false;
+	        }
+	    }, {
+	        key: '_updateRenderTexture',
+	        value: function _updateRenderTexture() {
+	            this._renderTexture.resize(this._bounds.width, this._bounds.height, true);
+	            this.invalidate();
+	        }
+	    }, {
+	        key: '_onViewportResize',
+	        value: function _onViewportResize() {
+	            this._bounds.width = this.stage.viewport.width;
+	            this._bounds.height = this.stage.viewport.height;
+	            this.setSize(new _math.Size(this.stage.viewport.width, this.stage.viewport.height));
+	            this._updateRenderTexture();
+	        }
+	    }]);
+	
+	    return UIStage;
+	}(_UIContainer2.UIContainer);
 
 /***/ },
 /* 7 */
@@ -1115,7 +1120,7 @@ module.exports =
 	});
 	exports.AdapterView = undefined;
 	
-	var _UIContainer2 = __webpack_require__(6);
+	var _UIContainer2 = __webpack_require__(5);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -1809,7 +1814,7 @@ module.exports =
 	
 	var _ImageView = __webpack_require__(20);
 	
-	var _UIContainer2 = __webpack_require__(6);
+	var _UIContainer2 = __webpack_require__(5);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -2405,7 +2410,7 @@ module.exports =
 	
 	var _pixi2 = _interopRequireDefault(_pixi);
 	
-	var _UIContainer2 = __webpack_require__(6);
+	var _UIContainer2 = __webpack_require__(5);
 	
 	var _math = __webpack_require__(3);
 	
@@ -2551,6 +2556,7 @@ module.exports =
 	            this._clipRect = new _pixi2.default.Rectangle(0, 0, this.size.width, this.size.height);
 	            this.hitArea = this._viewRect;
 	            this.updateClipMask();
+	            _get(Object.getPrototypeOf(ScrollView.prototype), 'onSizeChange', this).call(this);
 	        }
 	    }, {
 	        key: 'updateClipMask',
@@ -3174,8 +3180,8 @@ module.exports =
 	    }, {
 	        key: 'onSizeChange',
 	        value: function onSizeChange() {
-	            _get(Object.getPrototypeOf(SlideView.prototype), 'onSizeChange', this).call(this);
 	            this.hitArea = new _pixi2.default.Rectangle(0, 0, this.size.width, this.size.height);
+	            _get(Object.getPrototypeOf(SlideView.prototype), 'onSizeChange', this).call(this);
 	        }
 	    }, {
 	        key: 'onPanStart',

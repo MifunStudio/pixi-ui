@@ -10,6 +10,8 @@ module.exports = PIXI.ui = {
 
     UI: require('./UI'),
 
+    UIContainer: require('./UIContainer').UIContainer,
+
     UIStage: require('./UIStage').UIStage,
 
     layout: require('./layout'),

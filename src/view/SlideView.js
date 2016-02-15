@@ -88,8 +88,8 @@ export class SlideView extends ListView {
     }
 
     onSizeChange() {
-        super.onSizeChange();
         this.hitArea = new PIXI.Rectangle(0, 0, this.size.width, this.size.height);
+        super.onSizeChange();
     }
 
     onPanStart(e) {

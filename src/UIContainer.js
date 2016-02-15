@@ -58,7 +58,6 @@ export class UIContainer extends PIXI.Container {
     updateTransform() {
         this.uiContainerUpdateTransform();
         if(this.hasActivedTweens()) {
-            console.log('invalidate');
             this.invalidate();
         }
     }
@@ -102,6 +101,8 @@ export class UIContainer extends PIXI.Container {
     }
 
     onSizeChange() {
+        this.requestLayout();
+        this.invalidate();
     }
 
     requestLayout() {
