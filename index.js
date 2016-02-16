@@ -468,7 +468,6 @@ module.exports =
 	        value: function updateTransform() {
 	            this.uiContainerUpdateTransform();
 	            if (this.hasActivedTweens()) {
-	                console.log('invalidate');
 	                this.invalidate();
 	            }
 	        }
@@ -615,7 +614,6 @@ module.exports =
 	                this._renderSchedule = this.stage.scheduler.frame(function () {
 	                    _this2._renderToRenderTexture();
 	                    _this2._renderSchedule = null;
-	                    console.log('invalidate');
 	                }, 0);
 	            }
 	        }
@@ -2211,7 +2209,6 @@ module.exports =
 	        value: function addScrap(view, viewType) {
 	            this._scrapViewMap[viewType] = this._scrapViewMap[viewType] || [];
 	            this._scrapViewMap[viewType].push(view);
-	            console.log(1, viewType);
 	        }
 	    }, {
 	        key: "shiftScrap",
@@ -2690,7 +2687,6 @@ module.exports =
 	        value: function onPanEnd(e) {
 	            var _this2 = this;
 	
-	            console.log('panend');
 	            if (!this.isScrollable() || !this._dragging) return;
 	            if (this._direction === BOTH || this._direction === HORIZONTAL) {
 	                if (!this._tryBufferBackX()) {

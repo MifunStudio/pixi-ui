@@ -34,7 +34,6 @@ export class UIStage extends UIContainer {
             this._renderSchedule = this.stage.scheduler.frame(() => {
                 this._renderToRenderTexture();
                 this._renderSchedule = null;
-                console.log('invalidate');
             }, 0);
         }
     }

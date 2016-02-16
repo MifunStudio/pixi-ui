@@ -17,7 +17,6 @@ export class Recycler {
     addScrap(view, viewType) {
         this._scrapViewMap[viewType] = this._scrapViewMap[viewType] || [];
         this._scrapViewMap[viewType].push(view);
-        console.log(1, viewType);
     }
 
     shiftScrap(viewType) {
