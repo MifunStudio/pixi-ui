@@ -12,7 +12,7 @@ export class VBox extends LayoutManager {
             let child = children[i];
             start += this.childMargin.top;
             child.position.y = start;
-            start += UI.getHeight(child) + this.childMargin.right;
+            start += UI.getHeight(child) + this.childMargin.bottom;
             size.width = Math.max(UI.getWidth(child), size.width);
         }
         size.height = start;
